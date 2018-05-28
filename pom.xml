@@ -65,8 +65,8 @@
                             <candidate.name>TEST TEST</candidate.name>
                             <user.name>Test.barcelona</user.name>
                             <password>TestBCN1</password>
-                            <webdriver.wait.time.seconds>10</webdriver.wait.time.seconds>
-                            <retry.attempts.number>2</retry.attempts.number>
+                            <webdriver.wait.time.seconds>60</webdriver.wait.time.seconds>
+                            <retry.attempts.number>3</retry.attempts.number>
                             <rating>3</rating>
                         </systemPropertyVariables>
                     </configuration>

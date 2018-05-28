@@ -15,9 +15,12 @@ public class ApplicationDetailsPage extends BasePage {
     private String ratingTemplate = "//div[@name='evaluation']//span[@role='button'][%s]";
     private By commentInput = By.xpath("//textarea[@id='evaluationStatement']");
     private By submitCommentButton = By.xpath("//button/span[text()='Submit comment']");
-    private By submitAssessmentButton = By.xpath("//button/span[text()='Submit assessment']");
-    private String commentMessageTemplate = "//div[contains(@class, 'c-chat-message')][1]//div[contains(@class, 'c-chat-message__body')]/div[text()='%s']";
-    private String ratingElementSuffix = "/../../div[contains(@class, 'c-chat-message__header')]//*[contains(@class, 'rating--active')]";
+    private By setNextStepButton = By.xpath("//button/span[text()='Set next step']");
+    private String commentMessageTemplate = "//div[contains(@class, 'c-chat-message')][1]//*[contains(@class, 'c-chat-message__body')]/*[text()='%s']";
+    private String nextStepElementSuffix = "/../../div[contains(text(), 'invite for 1st interview')]";
+    private By nextStepDropDown = By.xpath("//span[text()='Next step']");
+    private By inviteForFirstInterviewOption = By.xpath("//a[text()='invite for 1st interview']");
+    private By inviteForFirstInterviewSelected = By.xpath("//span[text()='invite for 1st interview']");
 
 
     public ApplicationDetailsPage(WebDriver driver) {
@@ -29,26 +32,42 @@ public class ApplicationDetailsPage extends BasePage {
         return "test comment " + LocalDateTime.now().format(formatter);
     }
 
-    public void addAssessment(String commentText, int rating) {
 
+    public void addComment(String commentText) {
         driver.findElement(commentInput).sendKeys(commentText);
         waitUntilElementsVisible(Arrays.asList(submitCommentButton));
+    }
 
+
+    public void addRating(int rating) {
         By ratingToSet = By.xpath(String.format(ratingTemplate, rating));
         waitUntilElementsVisible(Arrays.asList(ratingToSet));
         driver.findElement(ratingToSet).click();
-
-        waitUntilElementsVisible(Arrays.asList(submitAssessmentButton));
-        driver.findElement(submitAssessmentButton).click();
-        waitForPageToBeReady();
-        refreshPage();
+        waitUntilElementsVisible(Arrays.asList(setNextStepButton));
     }
 
-    public void assertCommentAndRatingSaved(String commentText, int rating) {
+    public void submitNextStep() {
+        waitUntilElementsVisible(Arrays.asList(setNextStepButton));
+        driver.findElement(setNextStepButton).click();
+        waitForPageToBeReady();
+    }
+
+
+    public void selectInviteForFirstInverview() {
+        waitUntilElementsVisible(Arrays.asList(nextStepDropDown));
+        driver.findElement(nextStepDropDown).click();
+        waitUntilElementsVisible(Arrays.asList(inviteForFirstInterviewOption));
+        driver.findElement(inviteForFirstInterviewOption).click();
+        waitUntilElementsVisible(Arrays.asList(inviteForFirstInterviewSelected));
+    }
+
+
+    public void assertChangesSaved(String commentText) {
+        refreshPage();
         By commentElement = By.xpath(String.format(commentMessageTemplate, commentText));
-        By ratingElement = By.xpath(String.format(commentMessageTemplate + ratingElementSuffix, commentText));
+        By nextStepElement = By.xpath(String.format(commentMessageTemplate + nextStepElementSuffix, commentText));
         waitFor(commentElement);
-        assertTrue(driver.findElements(ratingElement).size()==rating);
-        waitUntilElementsVisible(Arrays.asList(commentElement));
+        waitFor(nextStepElement);
+        waitUntilElementsVisible(Arrays.asList(commentElement, nextStepElement));
     }
 }

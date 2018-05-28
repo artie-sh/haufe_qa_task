@@ -21,8 +21,10 @@ public class RateCandidateTest extends BaseTest {
         ApplicationDetailsPage applicationDetailsPage = dashBoardPage.getOnApplicationDetailsPage(candidateName);
         String commentText = applicationDetailsPage.getCommentText();
 
-        applicationDetailsPage.addAssessment(commentText, ratingToSet);
+        applicationDetailsPage.addComment(commentText);
         log("Comment added: " + commentText);
-        applicationDetailsPage.assertCommentAndRatingSaved(commentText, ratingToSet);
+        applicationDetailsPage.selectInviteForFirstInverview();
+        applicationDetailsPage.submitNextStep();
+        applicationDetailsPage.assertChangesSaved(commentText);
     }
 }
