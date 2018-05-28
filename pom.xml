@@ -81,9 +81,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.21.0</version>
-                <configuration>
-                    <title>${project.artifactId} ${maven.build.timestamp}</title>
-                </configuration>
             </plugin>
         </plugins>
     </reporting>
